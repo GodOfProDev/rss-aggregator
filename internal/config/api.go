@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/godofprodev/rss-aggregator/internal/auth"
 	"github.com/godofprodev/rss-aggregator/internal/database"
 	"github.com/godofprodev/rss-aggregator/internal/utils"
 	"github.com/google/uuid"
@@ -29,7 +30,6 @@ func GetApiConfig() *ApiConfig {
 }
 
 func (apiCfg *ApiConfig) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
-
 	type parameters struct {
 		Name string `json:"name"`
 	}
@@ -52,5 +52,21 @@ func (apiCfg *ApiConfig) HandleCreateUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	utils.RespondWithJSON(w, http.StatusOK, user)
+	utils.RespondWithJSON(w, 201, user)
+}
+
+func (apiCfg *ApiConfig) HandleGetUser(w http.ResponseWriter, r *http.Request) {
+	apiKey, err := auth.GetAPIKey(r.Header)
+	if err != nil {
+		utils.RespondWithError(w, 403, fmt.Sprintf("Authentication error: %v", err))
+		return
+	}
+
+	user, err := apiCfg.DB.GetUserByAPIKey(r.Context(), apiKey)
+	if err != nil {
+		utils.RespondWithError(w, 400, fmt.Sprintf("Couldn't get user: %v", err))
+		return
+	}
+
+	utils.RespondWithJSON(w, 200, user)
 }

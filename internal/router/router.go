@@ -33,6 +33,7 @@ func (r *Router) Start() {
 	v1Router.Get("/healthz", handlerReadiness)
 	v1Router.Get("/err", handlerErr)
 	v1Router.Post("/users", env.GetApiConfig().HandleCreateUser)
+	v1Router.Get("/users", env.GetApiConfig().HandleGetUser)
 
 	router.Mount("/v1", v1Router)
 
