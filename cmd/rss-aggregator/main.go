@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"github.com/godofprodev/rss-aggregator/internal/api"
 	env "github.com/godofprodev/rss-aggregator/internal/config"
 	"github.com/godofprodev/rss-aggregator/internal/database"
 	"github.com/godofprodev/rss-aggregator/internal/router"
@@ -22,7 +23,7 @@ func main() {
 		panic(err)
 	}
 
-	env.Init(database.New(conn))
+	api.Init(database.New(conn))
 
 	apiRouter := router.NewRouter()
 

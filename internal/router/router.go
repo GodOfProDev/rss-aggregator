@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"github.com/godofprodev/rss-aggregator/internal/api"
 	env "github.com/godofprodev/rss-aggregator/internal/config"
 	"log"
 	"net/http"
@@ -32,8 +33,11 @@ func (r *Router) Start() {
 
 	v1Router.Get("/healthz", handlerReadiness)
 	v1Router.Get("/err", handlerErr)
-	v1Router.Post("/users", env.GetApiConfig().HandleCreateUser)
-	v1Router.Get("/users", env.GetApiConfig().HandleGetUser)
+
+	v1Router.Post("/users", api.GetApiConfig().HandleCreateUser)
+	v1Router.Get("/users", api.GetApiConfig().MiddlewareAuth(api.GetApiConfig().HandleGetUser))
+
+	v1Router.Post("/feeds", api.GetApiConfig().MiddlewareAuth(api.GetApiConfig().HandleCreateFeed))
 
 	router.Mount("/v1", v1Router)
 
