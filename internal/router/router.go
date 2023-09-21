@@ -38,6 +38,7 @@ func (r *Router) Start() {
 	v1Router.Get("/users", api.GetApiConfig().MiddlewareAuth(api.GetApiConfig().HandleGetUser))
 
 	v1Router.Post("/feeds", api.GetApiConfig().MiddlewareAuth(api.GetApiConfig().HandleCreateFeed))
+	v1Router.Get("/feeds", api.GetApiConfig().HandleGetFeeds)
 
 	router.Mount("/v1", v1Router)
 

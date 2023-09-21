@@ -86,3 +86,13 @@ func (cfg *ApiConfig) HandleCreateFeed(w http.ResponseWriter, r *http.Request, u
 
 	utils.RespondWithJSON(w, 201, feed)
 }
+
+func (cfg *ApiConfig) HandleGetFeeds(w http.ResponseWriter, r *http.Request) {
+	feeds, err := cfg.DB.GetFeeds(r.Context())
+	if err != nil {
+		utils.RespondWithError(w, 400, fmt.Sprintf("Couldn't get feeds: %v", err))
+		return
+	}
+
+	utils.RespondWithJSON(w, 201, feeds)
+}
